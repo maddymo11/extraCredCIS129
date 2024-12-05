@@ -12,7 +12,7 @@ class Course:
          
      def __str__(self):      
          return f'Subject:{self.subject}CRN:{self.CRN}\nClass Time:{self.time:>2}\nCredits:{self.credit:>2}\nMeeting Times:{self.meeting_days:>2}\n Location:{self.location}'
-  #define singular course       
+#define singular courses       
 MAT123 = Course('math',263876,'12:00pm-3:00pm',2,'Monday/Wednesday','East Campus')     
 WRI101 = Course('literature',783594,'1:00pm-2:15pm',3,'Tuesday/Thursday','Downtown Campus')
 print(MAT123)
