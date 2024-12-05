@@ -1,0 +1,42 @@
+
+#class for course with all info regarding course
+class Course:
+     def __init__(self,subject,CRN,time,credit,meeting_days,location):
+         self.subject = subject
+         self.CRN = CRN
+         self.time = time
+         self.credit = credit
+         self.meeting_days = meeting_days
+         self.location = location
+         
+         
+     def __str__(self):      
+         return f'Subject:{self.subject}CRN:{self.CRN}\nClass Time:{self.time:>2}\nCredits:{self.credit:>2}\nMeeting Times:{self.meeting_days:>2}\n Location:{self.location}'
+  #define singular course       
+MAT123 = Course('math',263876,'12:00pm-3:00pm',2,'Monday/Wednesday','East Campus')     
+WRI101 = Course('literature',783594,'1:00pm-2:15pm',3,'Tuesday/Thursday','Downtown Campus')
+print(MAT123)
+
+print()
+#Dictionary method of the above attempt
+     #MATH233 = {
+           #"subject": "math","CRN":277787,
+           #"time":'1:00-2:00', 'credits':'3',
+           #'days':'Tuesday/Thursday','Campus':'West Campus'}
+           
+#print()           
+#print(MATH233) 
+
+course_options = {
+     'Science':['BIO101','CHM151'],
+          'Arts':['CHR138','DRAW200'],
+               'Math':['MATH335','MATH123'],
+                    'Literature':['REA168','WRI102']}
+print()
+for k, v in course_options.items():
+     print(k,v)
+
+#figuring out how to display multiple class options
+
+semester_classes =[MAT123,WRI101]
+print(semester_classes)
