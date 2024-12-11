@@ -14,18 +14,22 @@ import csv #import file for classes
 
 
 #register for course by CRN
-def searchByCRN(file_path, studentClasses):
+def searchByCRN(file_path, studentClasses, found_match, matchCRN):
     #studentClasses = [] #empty list to add registered classes
     while True:
-        pickCRN = input('Please enter the CRN of the course you will be registering for. (type exit to stop)\n')
-        if pickCRN.lower() == 'exit':
-            print('Exiting registration...')
-            break
 
         with open(file_path, mode='r') as classFile:
             reader = csv.DictReader(classFile)
             courseFound = False #flag to check CRN
 
+            if found_match == False:
+                pickCRN = input('Please enter the CRN of the course you will be registering for. (type exit to stop)\n')
+                if pickCRN.lower() == 'exit':
+                    print('Exiting registration...')
+                    break
+            elif found_match == True:
+                pickCRN = matchCRN
+                
                 #loop through rows
             for row in reader:
                 if row["CRN"] == pickCRN:
@@ -42,86 +46,124 @@ def searchByCRN(file_path, studentClasses):
                                 'Class': row["Class"],
                                 'SubjectCode': row["SubjectCode"],
                                 'CourseNumber': row["CourseNumber"],
-                                'CRN': row["CRN"]
+                                'CRN': row["CRN"],
+                                'Credits': row["Credits"]
                             })
-                            print(f'{row["Class"]} has been aded to your schedule.')
+                            print(f'{row["Class"]} has been added to your schedule.')
                             break
                         else:
                             print('Invalid input. Please enter y or n.')
 
             if not courseFound:
                 print('No class found with provided CRN.')
+                continue
 
 
-                    
-        moreCourses = input('Would you like to register for another course? Enter y or n.\n')
-        if moreCourses.lower() == 'n':
+        if found_match == False:           
+            moreCourses = input('Would you like to register for another course? Enter y or n.\n')
+            if moreCourses.lower() == 'n':
+                break
+            elif moreCourses.lower() != 'y':
+                print('Invalid Input. Please enter y or n.')
+        else:
             break
-        elif moreCourses.lower() != 'y':
-            print('Invalid Input. Please enter y or n.')
 
 
 
 #prompt to choose course
-def chooseCourse(file_path, firstName, lastName, studentID):
+def chooseCourse(file_path, firstName, lastName, studentID,):
     studentClasses = []
+
+    #read all rows once before the loop
+    with open(file_path, mode='r') as classFile:
+        reader = csv.DictReader(classFile)            
+        allRows = list(reader) #list for searching CRN    
+    
     while True:
         matchingRow = [] #list to store relevant courses
-        with open(file_path, mode='r') as classFile:
-            reader = csv.DictReader(classFile)
-            print('Here are the available subjects for registration:') #print available subjects
-            print('Math, Science, Literature, Arts, Language, History, Technology, Engineering')
 
-            #get subject request
-            rawRequest = input("Please enter the subject of the class you are interested in. Enter 'exit' to stop. \n")
-            #validate input
-            stripRequest = rawRequest.strip()
-            if not stripRequest.isalpha():
-                print('Invalid. Classes cannot contain digits.')
+        print('Here are the available subjects for registration:') #print available subjects
+        print('Math, Science, Literature, Arts, Language, History, Technology, Engineering')
+
+        #get subject request
+        rawRequest = input("Please enter the subject of the class you are interested in, or enter a CRN. Enter 'exit' to stop. \n")
+        #validate input
+        stripRequest = rawRequest.strip()
+
+        if stripRequest.lower() == 'exit':
+            print('Exiting...')
+            break
+        
+        #flag for matching class
+        found_match = False
+        #matchCRN = []
+        for row in allRows:
+            if row["CRN"] == stripRequest:
+                print('Class found.')
+                matchingRow.append(row)
+                matchCRN = stripRequest
+                found_match = True
                 continue
+
+        if not found_match:
+            print('Invalid. CRN not located.')
+            continue
+                
+        if not found_match:
+            #validate input
             lowerRequest = stripRequest.lower()
-            if lowerRequest == 'exit':
-                print('Exiting...')
-                break
             subjectRequest = lowerRequest.capitalize()
 
             #loop through rows to list subject information
-            for row in reader:
+            for row in allRows:
                 if row["Subject"] == subjectRequest:
                     matchingRow.append(row) #add each matching subject to list of info
         
             #if no matches are found, print class not found
             if not matchingRow:
                 print('Class Not Found')
-                continue
-
+            
+        if matchingRow:
             #if matches are found, display them
             for row in matchingRow:
-                print(f'Subject Information: ({row["SubjectCode"]}{row["CourseNumber"]}) {row["Class"]}, CRN: {row["CRN"]}')
+                print(f'Subject Information: ({row["SubjectCode"]}{row["CourseNumber"]}) {row["Class"]}, CRN: {row["CRN"]} ({row['Credits']} Credits)')
     
-        searchByCRN(file_path, studentClasses)
+        searchByCRN(file_path, studentClasses, found_match, matchCRN)
         #ask if user wants more courses
-        moreSubjects = input('Would you like to search for another subject? Enter y or n.\n')
-        if moreSubjects.lower() == 'n':
-            print('Exiting...')
+        break_flag = False
+        while True:
+            moreSubjects = input('Would you like to search for another subject? Enter y or n.\n')
+            if moreSubjects.lower() == 'n':
+                print('Exiting...')
+                break_flag = True
+                break
+            elif moreSubjects.lower() == 'y':
+                break_flag = False
+                break
+            elif moreSubjects.lower() != 'y':
+                print('Invalid input. Please enter y or n.') 
+
+        if break_flag == True:
             break
-        elif moreSubjects.lower() != 'y':
-            print('Invalid input. Please enter y or n.')    #FIX LOOP TO VALIDATE INPUT
-        break
     
     return studentClasses
 
 
 
 #display schedule to user 
-def printSchedule(firstName, lastName, studentID, studentClasses):
+def printSchedule(firstName, lastName, studentID, studentClasses, file_path):
+    print(' ')
     print('*' * 36)
     print(f'{firstName} {lastName} \nStudent ID: {studentID}')
-    print('Class Schedule:')
+    print('Class Schedule:\n')
     for course in studentClasses:
-        print(f"{course['SubjectCode']}{course['CourseNumber']} - {course['Class']} (CRN: {course['CRN']})")
-
-
+        print(f"{course['SubjectCode']}{course['CourseNumber']} - {course['Class']} (CRN: {course['CRN']}) ({course['Credits']} Credits)")
+    
+    totalCredits = 0 #initialize variable to add all credits
+    with open(file_path, mode='r') as classFile:
+        for course in studentClasses:
+            totalCredits += int(course["Credits"])
+    print(f'\nTotal Credits Registered: {totalCredits}')
 
 
 
@@ -165,9 +207,8 @@ def main():
     file_path = 'allClasses.csv'
     studentClasses = chooseCourse(file_path, firstName, lastName, studentID)
     
-    printSchedule(firstName, lastName, studentID, studentClasses) #pass values to print function
+    printSchedule(firstName, lastName, studentID, studentClasses,file_path) #pass values to print function
 
     #return firstName, lastName, studentID
 
 main()
-
