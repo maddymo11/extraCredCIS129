@@ -1,28 +1,28 @@
-Subject,Class,SubjectCode,CourseNumber,CRN
-Math,Algebra,MAT,180,0111
-Math,Trigonometry,MAT,189,0112
-Math,Calculus,MAT,220,0113
-Science,Biology,BIO,182,0121
-Science,Chemistry,CHM,151,0131
-Science,Astronomy,AST,129,0141
-Literature,Writing,WRT,101,0211
-Literature,Writing,WRT,102,0311
-Literature,Reading,REA,168,0411
-Arts,Drawing,DRW,200,2111
-Arts,Painting,PNT,150,3111
-Arts,Sculpting,SCP,202,4111
-Language,Arabic,ARB,150,0114
-Language,French,FRN,150,0115
-Language,Spanish,SPN,150,0116
-History,Archaeology,ARC,200,0151
-History,Mythology,MYT,180,0161
-History,Religion,REL,130,0171
-Technology,Computer Aided Design,CAD,160,0511
-Technology,Coding,CIS,129,0611
-Technology,Digital Art,DAR,200,0711
-Engineering,Automotive,AUT,200,5111
-Engineering,Aviation,AVT,200,6111
-Engineering,Construction,CNT,202,7111
+Subject,Class,SubjectCode,CourseNumber,CRN,Credits
+Math,Algebra,MAT,180,0111,4
+Math,Trigonometry,MAT,189,0112,5
+Math,Calculus,MAT,220,0113,4
+Science,Biology,BIO,182,0121,4
+Science,Chemistry,CHM,151,0131,5
+Science,Astronomy,AST,129,0141,3
+Literature,Writing,WRT,101,0211,3
+Literature,Writing,WRT,102,0311,4
+Literature,Reading,REA,168,0411,3
+Arts,Drawing,DRW,200,2111,3
+Arts,Painting,PNT,150,3111,4
+Arts,Sculpting,SCP,202,4111,4
+Language,Arabic,ARB,150,0114,4
+Language,French,FRN,150,0115,4
+Language,Spanish,SPN,150,0116,4
+History,Archaeology,ARC,200,0151,3
+History,Mythology,MYT,180,0161,4
+History,Religion,REL,130,0171,5
+Technology,Computer Aided Design,CAD,160,0511,5
+Technology,Coding,CIS,129,0611,4
+Technology,Digital Art,DAR,200,0711,3
+Engineering,Automotive,AUT,200,5111,4
+Engineering,Aviation,AVT,200,6111,4
+Engineering,Construction,CNT,202,7111,5
 
 
 
