@@ -3,8 +3,7 @@
 #print out schedule at the end
 
 # Madison Simonds
-# Mei Li Chan
-# Amy Cardona
+
 
 #welcome message
 print('Welcome to Pima Community College')
