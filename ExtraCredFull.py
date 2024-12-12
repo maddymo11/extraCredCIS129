@@ -95,21 +95,19 @@ def chooseCourse(file_path, firstName, lastName, studentID,):
         
         #flag for matching class
         found_match = False
-        #matchCRN = []
+        matchCRN = None
+
+        #check if input is CRN
         for row in allRows:
             if row["CRN"] == stripRequest:
                 print('Class found.')
                 matchingRow.append(row)
                 matchCRN = stripRequest
                 found_match = True
-                continue
-
-        if not found_match:
-            print('Invalid. CRN not located.')
-            continue
+                break
                 
+        #if input is not CRN, check if subject name     
         if not found_match:
-            #validate input
             lowerRequest = stripRequest.lower()
             subjectRequest = lowerRequest.capitalize()
 
@@ -121,13 +119,13 @@ def chooseCourse(file_path, firstName, lastName, studentID,):
             #if no matches are found, print class not found
             if not matchingRow:
                 print('Class Not Found')
-            
-        if matchingRow:
-            #if matches are found, display them
-            for row in matchingRow:
-                print(f'Subject Information: ({row["SubjectCode"]}{row["CourseNumber"]}) {row["Class"]}, CRN: {row["CRN"]} ({row['Credits']} Credits)')
-    
-        searchByCRN(file_path, studentClasses, found_match, matchCRN)
+            else:
+                #if matches are found, display them
+                for row in matchingRow:  
+                    print(f'Subject Information: ({row["SubjectCode"]}{row["CourseNumber"]}) {row["Class"]}, CRN: {row["CRN"]} ({row['Credits']} Credits)')
+        
+        searchByCRN(file_path, studentClasses, found_match, matchCRN) #call searchfunction
+        
         #ask if user wants more courses
         break_flag = False
         while True:
