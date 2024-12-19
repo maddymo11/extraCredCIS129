@@ -1,0 +1,128 @@
+#class for course with all info regarding course
+class Course:
+    def __init__(self, subject='N/A', CRN='N/A', time='N/A', credit='N/A', meeting_days='N/A', campus='N/A'):
+        self.subject = subject
+        self.CRN = CRN
+        self.time = time
+        self.credit = credit
+        self.meeting_days = meeting_days
+        self.campus = campus
+
+    def __str__(self):
+        return (f"Subject: {self.subject:<7} CRN: {self.CRN:>6}\n"
+                f"Class Time: {self.time}\n"
+                f"Credits: {self.credit}\n"
+                f"Meeting Times: {self.meeting_days}\n"
+                f"Campus: {self.campus}")
+
+
+class Student:
+    def __init__(self, name):
+        self.name = name
+        self.registered_courses = []
+
+    def register_course(self, course):
+        # Check for conflicts in CRN
+        if any(registered.CRN == course.CRN for registered in self.registered_courses):
+            print(f"Error: You are already registered for a class with CRN {course.CRN}.")
+            return
+
+        # Check for time conflicts
+        for registered in self.registered_courses:
+            if registered.time == course.time:
+                print(f"Error: Time conflict with {registered.subject} (CRN: {registered.CRN}).")
+                return
+
+        # Check for meeting days conflicts
+        registered_days = {day for registered in self.registered_courses for day in registered.meeting_days.split('/')}
+        course_days = set(course.meeting_days.split('/'))
+        if registered_days & course_days:  # Check if there’s any overlap
+            print(f"Error: Meeting days conflict with another registered class.")
+            return
+
+        # If no conflicts, register for the course
+        self.registered_courses.append(course)
+        print(f"Successfully registered for {course.subject} (CRN: {course.CRN}).")
+
+    def view_schedule(self):
+        if self.registered_courses:
+            print(f"{self.name}'s Schedule:")
+            for course in self.registered_courses:
+                print(course)
+                print()
+        else:
+            print("No classes registered yet.")
+
+
+# Predefined courses
+semester_classes = []
+MAT123 = Course('Math', '263876', '12:00pm-3:00pm', '2', 'Monday/Wednesday', 'East Campus')
+WRI101 = Course('Writing', '783594', '1:00pm-2:15pm', '3', 'Tuesday/Thursday', 'Downtown Campus')
+MAT200 = Course('Math', '570483', '12:00pm-3:00pm', '3', 'Monday/Thursday', 'North Campus')
+try:
+    with open('available_classes.txt', 'r') as f:
+        for line in f:
+            # Assuming the file format is: subject,CRN,time,credit,meeting_days,campus
+            fields = line.strip().split(',')
+            if len(fields) == 6:
+                new_course = Course(*fields)  # Unpack fields into the Course constructor
+                semester_classes.append(new_course)
+except FileNotFoundError:
+    print("Error: 'available_classes.txt' not found.")
+
+# Display all courses including those read from the file
+print("All Classes:")
+for course in semester_classes:
+    print(course)
+
+semester_classes.extend([MAT123, WRI101, MAT200])
+
+# Function to display available classes
+def display_available_classes():
+    print("Available Classes:")
+    for i, course in enumerate(semester_classes, start=1):
+        print(f"{i}. {course.subject} (CRN: {course.CRN})")
+        print(course)
+        print()
+
+# Main registration functionality
+def class_registration_system():
+    print("Welcome to the Class Registration System!")
+    name = input("Enter your name: ")
+    student = Student(name)
+
+    while True:
+        print("\nMenu:")
+        print("1. View Available Classes")
+        print("2. Register for a Class")
+        print("3. View My Schedule")
+        print("4. Exit")
+        choice = input("Choose an option: ")
+
+        if choice == '1':
+            display_available_classes()
+
+        elif choice == '2':
+            display_available_classes()
+            try:
+                class_choice = int(input("Enter the number of the class you want to register for: ")) - 1
+                if 0 <= class_choice < len(semester_classes):
+                    student.register_course(semester_classes[class_choice])
+                else:
+                    print("Invalid class selection. Please try again.")
+            except ValueError:
+                print("Invalid input. Please enter a number.")
+
+        elif choice == '3':
+            student.view_schedule()
+
+        elif choice == '4':
+            print("Thank you for using the Class Registration System. Goodbye!")
+            break
+
+        else:
+            print("Invalid choice. Please try again.")
+
+
+# Running the registration system
+class_registration_system()
